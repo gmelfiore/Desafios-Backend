@@ -22,7 +22,7 @@ router.post('/', (req,res)=>{
 router.post('/:cid/products/:pid', (req,res)=>{ 
     res.setHeader('Content-Type', 'application/json');
     const {cid, pid}= req.params;
-    return res.status(201).json();
+    return res.status(201).json(CartsManager.addProductsInCart(Number(cid, pid)));
 })
 
 module.exports = router
