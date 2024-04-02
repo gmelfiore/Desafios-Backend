@@ -29,8 +29,8 @@ class ProductManager {
             console.log(`No es posible guardar el archivo ${error}`)
         }
     }
-    addProduct(title, description, price, thumbnail, code, stock, status){
-        if (!title || !description || !price || !code || !stock || !status)
+    addProduct(title, description, price, thumbnails=[], code, stock, status, category){
+        if (!title || !description || !price || !code || !stock || !status || !category)
 
         return 'Todos los campos son obligatorios'
 
@@ -44,10 +44,11 @@ class ProductManager {
             title:title,
             description:description,
             price:price,
-            thumbnail:thumbnail,
+            thumbnails: thumbnails,
             code:code,
             stock:stock,
             status: true,
+            category: category,
         }
         this.products.push (nuevoProducto);
         this.guardarArchivo();
@@ -66,9 +67,16 @@ class ProductManager {
     }
 
     async getProductById(id){
+    let status= false;
+    let resp = `El producto con id ${id} no existe`
     const productos = await this.leerProductos();
     const producto = productos.find (p => p.id === id);
-        return producto
+    if (producto){
+        let status= true;
+        let resp = producto
+        return {status, resp}
+    }
+        return {status, resp}
    }
         
     
