@@ -1,5 +1,5 @@
 
-const ProductManager = require("./productManager");
+const ProductManager = require("./dao/productManager");
 
 const producto = new ProductManager();
 

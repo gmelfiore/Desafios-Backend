@@ -6,7 +6,7 @@ class ProductManager {
     static idProduct= 0;
 
     constructor() {
-        this.path = './data/productos.json';
+        this.path = '../data/productos.json';
         this.products = this.leerProductos();
         
     }
@@ -29,8 +29,8 @@ class ProductManager {
             console.log(`No es posible guardar el archivo ${error}`)
         }
     }
-    addProduct(title, description, price, thumbnail, code, stock){
-        if (!title || !description || !price || !thumbnail || !code || !stock)
+    addProduct(title, description, price, thumbnail, code, stock, status){
+        if (!title || !description || !price || !code || !stock || !status)
 
         return 'Todos los campos son obligatorios'
 
@@ -47,6 +47,7 @@ class ProductManager {
             thumbnail:thumbnail,
             code:code,
             stock:stock,
+            status: true,
         }
         this.products.push (nuevoProducto);
         this.guardarArchivo();
@@ -63,14 +64,14 @@ class ProductManager {
         
     return productosGuardados;
     }
-    getProductById(id){
 
-    const producto = this.products.find (p => p.id == id);
-    if (producto)
+    async getProductById(id){
+    const productos = await this.leerProductos();
+    const producto = productos.find (p => p.id === id);
         return producto
-    else
-        return `Not found`
-    }
+   }
+        
+    
 
     deleteProduct(id){
         let msgError = `No existe un producto con id ${id}`

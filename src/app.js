@@ -1,22 +1,19 @@
 const express= require ("express")
-const ProductManager=require ("./productManager")
-
-const app = express();
+const productsRouter = require ("./routes/products.router")
 const PORT= 3000;
 
+const app = express();
 
-app.get('/products', (req,res)=>{
-    const {limit}= req.query;
-    const prod = new ProductManager();
-    console.log(prod)
-  return res.json({productos:prod.getProducts(limit)});  
-});
 
-app.get ('/products/:pid', (req,res)=>{
-    const {pid}= req.params;
-    const prod = new ProductManager();
-    return res.json({productoid: prod.getProductById(Number(pid))})
-});
+app.use (express.json());
+app.use (express.urlencoded({extended:true}));
+app.use ('/api/products', productsRouter);
+
+app.get('/', (req,res)=>{
+    res.setHeader('Content-Type', 'text/plain');
+    res.status(200).send('OK');
+})
+
 
 app.listen(PORT, ()=>{
     console.log (`Servidor escuchando en el puerto ${PORT}`)
