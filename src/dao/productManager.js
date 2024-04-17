@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from "fs";
 
 class ProductManager {
     products;
@@ -29,7 +29,7 @@ class ProductManager {
             console.log(`No es posible guardar el archivo ${error}`)
         }
     }
-    addProduct(title, description, price, thumbnails=[], code, stock, status, category){
+    addProduct({title, description, price, thumbnails=[], code, stock, status, category}){
         if (!title || !description || !price || !code || !stock || !status || !category)
 
         return 'Todos los campos son obligatorios'
@@ -109,4 +109,4 @@ class ProductManager {
 
    
 
-module.exports = ProductManager;
+export default ProductManager 

@@ -1,6 +1,6 @@
-const fs = require('fs');
-const ProductManager = require('./productManager');
-const { response } = require('express');
+import fs from "fs";
+import ProductManager from "./productManager";
+
 
 class CartsManager {
     carts;
@@ -78,4 +78,4 @@ class CartsManager {
 
    
 
-module.exports = CartsManager;
+export default CartsManager;

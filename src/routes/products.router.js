@@ -1,6 +1,8 @@
-const Router = require ('express').Router;
+import { Router } from "express";
+import ProductManager from "../dao/productManager.js";
+
 const router = Router();
-const ProductManager = require("../dao/productManager");
+const manager = new ProductManager(filePath);
 
 router.get('/', (req,res)=>{
     res.setHeader('Content-Type', 'application/json');
@@ -10,31 +12,31 @@ router.get('/', (req,res)=>{
 router.get('/products', (req,res)=>{
     const {limit}= req.query;
     console.log(prod)
-  return res.status(200).json(ProductManager.getProducts(limit));  
+  return res.status(200).json(manager.getProductById(limit));  
 });
 
 router.get ('/products/:pid', (req,res)=>{
     const {pid}= req.params;
-    return res.status(200).json(ProductManager.getProductById(Number(pid)))
+    return res.status(200).json(manager.getProductById(Number(pid)))
 });
 
 router.post('/', (req,res)=>{
     
     res.setHeader('Content-Type', 'application/json');
-    return res.status(201).json(ProductManager.addProduct());
+    return res.status(201).json(manager.addProduct({...req.body}));
 })
 
 router.put('/:pid', (req,res)=>{
     let {pid} = req.params;
     res.setHeader('Content-Type', 'application/json');
-    return res.status(201).json(ProductManager.updateProduct(pid));
+    return res.status(201).json(manager.updateProduct(pid));
 })
 
 router.delete('/:pid', (req,res)=>{
     let {pid} = req.params;
     res.setHeader('Content-Type', 'application/json');
-    return res.status(201).json(ProductManager.deleteProduct(pid));
+    return res.status(201).json(manager.deleteProduct(pid));
 })
 
 
-module.exports = router
+export default router;

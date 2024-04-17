@@ -1,5 +1,5 @@
-const Router = require ('express').Router;
-const CartsManager= require('../dao/cartsManager.js');
+import { Router } from 'express';
+import CartsManager from "../dao/cartsManager.js"
 const router = Router();
 
 
@@ -25,4 +25,4 @@ router.post('/:cid/products/:pid', (req,res)=>{
     return res.status(201).json(CartsManager.addProductsInCart(Number(cid, pid)));
 })
 
-module.exports = router
+export default router;

@@ -1,5 +1,4 @@
-
-const ProductManager = require("./dao/productManager");
+import ProductManager from "./dao/productManager.js";
 
 const producto = new ProductManager();
 

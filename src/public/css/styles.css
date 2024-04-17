@@ -1,0 +1,48 @@
+table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+}
+
+th, td{
+    border: 1px solid #b116b1;
+    padding: 8px;
+    text-align: left;
+}
+
+th{
+    background-color: #f3b4f3;
+}
+
+form{
+    max-width: 400px;
+    margin: 25px;
+    padding: 20px;
+    border: 1 px solid #b116b1 ;
+    border-radius: 7px;
+}
+
+label{
+    display: block;
+    margin-bottom: 10px;
+}
+
+input{
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+button{
+    background-color: #b116b1;
+    color: white;
+    padding: 10px 12px;
+    border: #f3b4f3;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+button:hover{
+    background-color: aquamarine;
+}
