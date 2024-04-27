@@ -14,10 +14,16 @@ class ProductManager {
     leerProductos(){
         try{
             if (fs.existsSync(this.path)){
-                return JSON.parse(fs.readFileSync(this.path, 'utf-8'));  
-            }; 
-        } catch (error){ 
-            console.log (`Ocurrió un problema ${error}`)
+							const productos = JSON.parse(fs.readFileSync(this.path, 'utf-8'));
+
+							console.log('PRODUCTOS leerProductos: ', productos);
+
+              return productos;
+            } else {
+							throw new Error('Archivo no existe')
+						};
+        } catch (error){
+            throw new Error('No es posible leer el archivo: ', error)
         }
     }
 
@@ -29,14 +35,15 @@ class ProductManager {
             console.log(`No es posible guardar el archivo ${error}`)
         }
     }
-    addProduct({title, description, price, thumbnails=[], code, stock, status, category}){
-        if (!title || !description || !price || !code || !stock || !status || !category)
+    async addProduct({title, description, price, thumbnails=[], code, stock, status, category}){
 
-        return 'Todos los campos son obligatorios'
+        if (!title || !description || !price || !code || !stock || !status || !category)
+        	throw new Error('Todos los campos son obligatorios')
 
         const codeRepetido= this.products.some(p => p.code == code);
+
         if (codeRepetido )
-        return `El código ingresado ${code} esta registrado con otro producto`;
+        	throw new Error(`El código ingresado ${code} esta registrado con otro producto`);
 
         const id = ProductManager.idProduct ++;
         const nuevoProducto = {
@@ -53,12 +60,10 @@ class ProductManager {
         this.products.push (nuevoProducto);
         this.guardarArchivo();
         return 'Producto agregado exitosamente'
-
-
-
     }
     async getProducts(limit = 0){
         let productosGuardados = await this.leerProductos();
+            console.log(productosGuardados);
         limit = Number(limit);
     if (limit > 0)
         return this.products.slice (0, limit);
