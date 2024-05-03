@@ -1,6 +1,6 @@
 import fs from "fs";
 
-class ProductManager {
+class ProductManagerMemory {
     products;
     path;
     static idProduct= 0;
@@ -47,7 +47,7 @@ class ProductManager {
 
         const id = ProductManager.idProduct ++;
         const nuevoProducto = {
-            id: id,
+            id:id,
             title:title,
             description:description,
             price:price,
@@ -114,4 +114,4 @@ class ProductManager {
 
    
 
-export default ProductManager 
+export default ProductManagerMemory 

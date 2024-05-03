@@ -1,38 +1,34 @@
 import { Router } from "express";
-import ProductManager from "../dao/productManager.js";
+import {ProductManagerMongo as ProductManager } from '../dao/productManagerMongo.js'
+import { isValidObjectId } from "mongoose";
+
 
 const router = Router();
 const manager = new ProductManager();
 
-router.get('/', (req,res)=>{
-    res.setHeader('Content-Type', 'application/json');
-    res.status(200).json({});
-})
 
 router.get('/products', async (req,res)=>{
 
 	try {
-    const {limit}= req.query;
-
-		const products = await manager.getProducts(limit);
-
-		console.log(products);
-
-  	return res.status(200).json(products);
+    let products= await manager.getProducts()
+	res.status(200).json({
+		products
+	})
 	} catch (error) {
 		return res.status(500).json({ Message: error.message });
 	}
 
 });
 
-router.get ('/products/:pid', async (req,res)=> {
-
+router.get ('/products/:id', async (req,res)=> {
+	const {id}= req.params;
+	if (!isValidObjectId(id)){
+		res.status(400).json ({error: `Ingrese un id válido`})
+	}
 	try {
-    const {pid}= req.params;
+		const product = await manager.getProductBy({_id:id});
 
-		const product = await manager.getProductById(Number(pid));
-
-    return res.status(200).json(product)
+    return res.status(200).json({product})
 		
 	} catch(error) {
 		return res.status(500).json({ Message: error.message });
@@ -40,28 +36,66 @@ router.get ('/products/:pid', async (req,res)=> {
 });
 
 router.post('/', async (req,res)=>{
+	let {id, title, description, price, thumbnails, code, stock, category}= req.body
+	if (!id || !title || !description || !price || !code || !stock || !category){
+		return res.status(400).json({error: 'Todos los campos son obligatorios'})
+	}
+	
+	let existe
+	try{
+		existe= await ProductManager.getProductsBy({code})
+	} catch (error){
+		return res.status(500).json({error: "Ocurrio un error"})
+	}
+	if (existe){
+		return res.status(400).json({error:`El producto con el código ${code} ya existe`})
+	}
 
 	try {
-		const productSaved = await manager.addProduct({...req.body});
-
-		return res.status(201).json({ message: productSaved });
+		let nuevoProducto = await ProductManager.addProduct({id, title, description, price, thumbnails, code, stock, category})
+		return res.status(201).json({nuevoProducto})
 	} catch (error) {
-		return res.status(500).json({ message: error.message });
+		return res.status(500).json({error: "Ocurrio un error"})
 	}
 })
 
 
-router.put('/:pid', (req,res)=>{
-    let {pid} = req.params;
-    return res.status(201).json(manager.updateProduct(pid));
+router.put('/:id', async (req,res)=>{
+    const {id}= req.params;
+	if (!isValidObjectId(id)){
+		res.status(400).json ({error: `Ingrese un id válido`})
+	}
+	let cambio= req.body
+	if (cambio._id){
+		delete cambio._id
+	}
+
+	try {
+		const productmodificado = await manager.updateProduct(id, cambio);
+    	return res.status(200).json({productmodificado})
+		
+	} catch(error) {
+		return res.status(500).json({ Message: error.message });
+	}
 })
 
-router.delete('/:pid', async (req,res)=>{
-    let {pid} = req.params;
+router.delete('/:id', async (req,res)=>{
+    let {id} = req.params;
+	if (!isValidObjectId(id)){
+		res.status(400).json ({error: `Ingrese un id válido`})
+	}
+	try {
+		let resultado = manager.deleteProduct(id)
+		if (resultado.deletedCount>0){
+			return res.status(200).json({payload:`Producto con id ${id} eliminado`})
+		}else{
+			return res.status(404).json({error: `No existe un producto con id ${id}`})
+		}
+	} catch (error) {
+		return res.status(500).json({ Message: error.message });
+	}
+	
 
-		const result = await manager.deleteProduct(pid)
-
-    return res.status(201).json(result);
 })
 
 

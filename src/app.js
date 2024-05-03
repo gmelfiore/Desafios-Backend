@@ -4,7 +4,8 @@ import cartsRouter from "./routes/carts.router.js";
 import views from "./routes/views.js";
 import {Server} from "socket.io";
 import {engine} from "express-handlebars";
-import ProductManager from "./dao/productManager.js";
+import {ProductManagerMongo as ProductManager} from "./dao/productManagerMongo.js";
+import mongoose from "mongoose";
 const PORT= 3000;
 
 const app = express();
@@ -41,3 +42,19 @@ socketServer.on('conected', socket=>{
         const result = p.addProduct({...producto});
     })
 })
+
+const connDB = async()=>{
+    try{
+        await mongoose.connect(
+            "mongodb+srv://gmelfiore21:Jv7Lqy1BfMT3BgxL@cluster0.uabdr0h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+            {
+                dbName:"ecommerce"
+            }
+        )
+        console.log("DB online")
+    } catch(error){
+        console.log("Error al conectar a DB", error.message)
+    }
+}
+
+connDB()

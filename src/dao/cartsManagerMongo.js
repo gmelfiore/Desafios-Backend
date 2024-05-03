@@ -1,8 +1,8 @@
 import fs from "fs";
-import ProductManager from "./productManager.js";
+import ProductManagerMemory from "./productManagerMemory.js";
 
 
-class CartsManager {
+export class CartsManagerMongo {
     carts;
     path;
     static idCart= 0;
@@ -39,7 +39,7 @@ class CartsManager {
    }
     
    createNewCart(){
-    const id= CartsManager.idCart ++;
+    const id= CartsManagerMemo.idCart ++;
     const newCart={
         id: id,
         products: [],
@@ -54,7 +54,7 @@ class CartsManager {
     const indexCart= this.carts.findIndex(c=> c.id === cid);
     if(indexCart !== -1){
         const indexProdInCart =this.carts[indexCart].products.findIndex(p=> p.id=== pid);
-        const p = new ProductManager();
+        const p = new ProductManagerMemory();
         const producto =p.getProductById(pid);
 
         if (producto.status && indexProdInCart === -1){
@@ -77,5 +77,3 @@ class CartsManager {
 
 
    
-
-export default CartsManager;
