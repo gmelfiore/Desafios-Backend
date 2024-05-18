@@ -16,7 +16,7 @@ async getProductsBy(filtro){
 }
 
 async updateProduct(id, producto){
-    return await productsModelo.findByIdAndUpdate(id, usuario, {runValidators:true, returnDocument:"after"})
+    return await productsModelo.findByIdAndUpdate(id, producto, {runValidators:true, returnDocument:"after"})
 }
 
 async deleteProduct(id){

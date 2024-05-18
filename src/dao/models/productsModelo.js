@@ -11,6 +11,7 @@ const productsEsquema = new mongoose.Schema(
                 code: {type: String, unique :true},
                 stock: Number,
                 category: String,
+                status: Boolean,
             },
             {
                 timestamps: true

@@ -3,6 +3,7 @@ import {ProductManagerMongo as ProductManager } from '../dao/productManagerMongo
 import { isValidObjectId } from "mongoose";
 
 
+
 const router = Router();
 const manager = new ProductManager();
 
@@ -26,7 +27,7 @@ router.get ('/products/:id', async (req,res)=> {
 		res.status(400).json ({error: `Ingrese un id válido`})
 	}
 	try {
-		const product = await manager.getProductBy({_id:id});
+		const product = await manager.getProductsBy({_id:id});
 
     return res.status(200).json({product})
 		

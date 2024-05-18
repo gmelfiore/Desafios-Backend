@@ -1,22 +1,28 @@
 import express from "express";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
-import views from "./routes/views.js";
+import {router as views} from "./routes/views.js";
 import {Server} from "socket.io";
 import {engine} from "express-handlebars";
 import {ProductManagerMongo as ProductManager} from "./dao/productManagerMongo.js";
 import mongoose from "mongoose";
+import path from "path";
+import __dirname from "./utils.js";
 const PORT= 3000;
 
 const app = express();
 
 const p= new ProductManager();
+
 app.use (express.json());
 app.use (express.urlencoded({extended:true}));
+app.use(express.static(path.join(__dirname, '/public')))
 
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
-app.set('views', './views');
+app.set('views', path.join(__dirname,'./views'));
+
+
 
 app.use ('/', views);
 app.use ('/api/products', productsRouter);
@@ -40,6 +46,29 @@ socketServer.on('conected', socket=>{
 
     socket.on('agregar producto', producto=>{
         const result = p.addProduct({...producto});
+    })
+})
+
+let usuarios=[];
+let mensajes =[];
+
+socketServer.on('connection', socket=>{
+    console.log(`Se ha conectado un cliente con id ${socket.id}`)
+
+    socket.on("id", nombre=>{
+        usuarios.push({id: socket.id, nombre})
+        socket.broadcast.emit("nuevoUsuario", nombre)
+    })
+    socket.on("mensaje", (nombre, mensaje)=>{
+        mensajes.push({nombre, mensaje});
+        socketServer.emit("nuevoMensaje", nombre, mensaje)
+        
+    })
+    socket.on("disconnect", ()=>{
+        let usuario=usuarios.find(u=>u.id===socket.id)
+        if(usuario){
+            socketServer.emit("saleUsuario", usuario.nombre)
+        }
     })
 })
 
