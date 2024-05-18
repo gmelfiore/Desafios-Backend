@@ -1,5 +1,7 @@
 const socket=io();
 
+let data;
+
 Swal.fire({
     title:"Identifiquese",
     input:"text",
@@ -35,8 +37,8 @@ Swal.fire({
             e.target.focus()
         }
     })
-    socket.on("nuevoMensaje", (nombre, mensaje)=>{
-        divMensajes.innerHTML+=`<p><strong>${nombre}</strong> dice <i>${mensaje}</i></p>`
+    socket.on("nuevoMensaje", (newMessage)=>{
+        divMensajes.innerHTML+=`<p><strong>${newMessage.user}</strong> dice <i>${newMessage.message}</i></p>`
         divMensajes.scrollTop=divMensajes.scrollHeight
     })
 

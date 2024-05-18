@@ -6,7 +6,7 @@ export const router = Router();
 router.get('/', (req, res)=>{
     const p= new ProductManager();
     const productos = p.getProducts();
-   return res.render('home', {productos})
+   return res.render('home', {productos, title: "Home"})
 });
 
 router.get('/realtimeproducts', (req, res)=>{

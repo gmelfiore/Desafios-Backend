@@ -8,6 +8,7 @@ import {ProductManagerMongo as ProductManager} from "./dao/productManagerMongo.j
 import mongoose from "mongoose";
 import path from "path";
 import __dirname from "./utils.js";
+import { messageModelo } from "./dao/models/messagesModelo.js";
 const PORT= 3000;
 
 const app = express();
@@ -59,11 +60,15 @@ socketServer.on('connection', socket=>{
         usuarios.push({id: socket.id, nombre})
         socket.broadcast.emit("nuevoUsuario", nombre)
     })
-    socket.on("mensaje", (nombre, mensaje)=>{
-        mensajes.push({nombre, mensaje});
-        socketServer.emit("nuevoMensaje", nombre, mensaje)
+    socket.on("mensaje", async (nombre, mensaje)=>{
+        const newMessage= await messageModelo.create({user:nombre, message: mensaje});
+        
+            socketServer.emit("nuevoMensaje", newMessage)
+        
+        
         
     })
+    
     socket.on("disconnect", ()=>{
         let usuario=usuarios.find(u=>u.id===socket.id)
         if(usuario){
