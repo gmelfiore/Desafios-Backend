@@ -1,0 +1,34 @@
+<h1>Bienvenido {{usuario.nombre}}</h1>
+<h2>Productos</h2>
+<hr>
+
+<ul>
+    {{#each productos}}
+    <li>id:{{id}}, Title: {{title}}, Description: {{description}}, Price: {{price}}, Code: {{code}}, Stock: {{stock}}, Category: {{category}} </li>
+    {{/each}}
+</ul>
+<br>
+<a href="/productos?pagina=1">Página 1</a>
+
+{{#if hasPrevPage}}
+    <a href="/productos?pagina={{prevPage}}">Ant.</a>
+{{/if}}
+{{#if hasNextPage}}
+    <a href="/productos?pagina={{nextPage}}">Sig.</a>
+{{/if}}
+
+<a href="/productos?pagina={{totalPages}}">Última página</a>
+<br>
+<label for="paginaActual"></label>
+<input type="number" max="{{totalPages}}" min="1" step="1" id="paginaActual" name="paginaActual" value="{{page}}" onchange="cambioPagina()">
+<br>
+<a href="/">Home</a>
+
+<script>
+    let inputPaginaActual=document.getElementById("paginaActual")
+    const cambioPagina=()=>{
+        window.location.href="/productos?pagina="+inputPaginaActual.value
+    }
+</script>
+
+{{>menu}}

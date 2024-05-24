@@ -1,6 +1,7 @@
 
 import { productsModelo } from "./models/productsModelo.js";
 
+
 export class ProductManagerMongo {
     
 async addProduct(product){
@@ -8,7 +9,11 @@ async addProduct(product){
 }
 
 async getProducts(){
-    return await productsModelo.find();
+    return await productsModelo.find().lean();
+}
+
+async getAllPaginate(page=1){
+    return await productsModelo.paginate({},{limit:10, page, lean:true})
 }
 
 async getProductsBy(filtro){

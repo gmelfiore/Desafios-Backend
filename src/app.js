@@ -1,4 +1,5 @@
 import express from "express";
+import MongoStore from "connect-mongo";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import {router as views} from "./routes/views.js";
@@ -9,6 +10,10 @@ import mongoose from "mongoose";
 import path from "path";
 import __dirname from "./utils.js";
 import { messageModelo } from "./dao/models/messagesModelo.js";
+import cookieParser from "cookie-parser";
+import sessions from "express-session";
+import {router as sessionsRouter} from "./routes/sessions.router.js"
+
 const PORT= 3000;
 
 const app = express();
@@ -19,6 +24,16 @@ app.use (express.json());
 app.use (express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname, '/public')))
 
+app.use(sessions({
+    secret: "Australis215",
+    resave:true,
+    saveUninitialized:true,
+    store: MongoStore.create({
+        ttl: 3600,
+        mongoUrl: "mongodb+srv://gmelfiore21:Jv7Lqy1BfMT3BgxL@cluster0.uabdr0h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&dbName=sessions"
+    })
+}))
+
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname,'./views'));
@@ -28,6 +43,10 @@ app.set('views', path.join(__dirname,'./views'));
 app.use ('/', views);
 app.use ('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter)
+app.use('/api/sessions',sessionsRouter)
+
+app.use(cookieParser())
+
 
 app.get('/', (req,res)=>{
     res.setHeader('Content-Type', 'text/plain');
@@ -51,7 +70,7 @@ socketServer.on('conected', socket=>{
 })
 
 let usuarios=[];
-let mensajes =[];
+
 
 socketServer.on('connection', socket=>{
     console.log(`Se ha conectado un cliente con id ${socket.id}`)
