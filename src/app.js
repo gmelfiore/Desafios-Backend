@@ -12,7 +12,9 @@ import __dirname from "./utils.js";
 import { messageModelo } from "./dao/models/messagesModelo.js";
 import cookieParser from "cookie-parser";
 import sessions from "express-session";
-import {router as sessionsRouter} from "./routes/sessions.router.js"
+import {router as sessionsRouter} from "./routes/sessions.router.js";
+import passport from "passport";
+import { initPassport } from "./config/passport.config.js";
 
 const PORT= 3000;
 
@@ -28,11 +30,16 @@ app.use(sessions({
     secret: "Australis215",
     resave:true,
     saveUninitialized:true,
-    store: MongoStore.create({
-        ttl: 3600,
-        mongoUrl: "mongodb+srv://gmelfiore21:Jv7Lqy1BfMT3BgxL@cluster0.uabdr0h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&dbName=sessions"
-    })
+    store: MongoStore.create(
+       {
+        mongoUrl: "mongodb+srv://gmelfiore21:Jv7Lqy1BfMT3BgxL@cluster0.uabdr0h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&dbName=sessions",
+        ttl: 3600
+       }
+    )
 }))
+initPassport()
+app.use(passport.initialize())
+app.use(passport.session()) 
 
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');

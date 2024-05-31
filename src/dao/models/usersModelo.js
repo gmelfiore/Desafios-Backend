@@ -9,4 +9,7 @@ export const usuariosModelo=mongoose.model('usuarios',new mongoose.Schema({
     rol:{
         type: String, default:"user"
     }
+},
+{
+    timestamps:true, strict: false
 }))

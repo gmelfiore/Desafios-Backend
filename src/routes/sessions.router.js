@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { UsuariosManagerMongo as UsuariosManager } from '../dao/usuariosManagerMongo.js';
-import { generaHash } from '../utils.js';
-import { Mongoose, Schema } from 'mongoose';
+import { generaHash, validaPasword } from '../utils.js';
+import passport from 'passport';
 export const router=Router()
 
 const usuariosManager=new UsuariosManager()
 
-router.post('/registro',async(req,res)=>{
+router.post('/registro', passport.authenticate("registro", {failureRedirect:"/api/sessions/error"}),async(req,res)=>{
 
     let {nombre, email, password}=req.body
     if(!nombre || !email || !password){
@@ -38,10 +38,11 @@ router.post('/registro',async(req,res)=>{
             }
         )
     }
-   
+    res.setHeader('Content-Type','application/json');
+    return res.status(201).json({mensaje:"Registro OK", nuevoUsuario:req.user});
 
 })
-router.post("/login", async(req, res)=>{
+router.post("/login", passport.authenticate("registro", {failureRedirect:"/api/sessions/error"}), async(req, res)=>{
     let {email, password, web}=req.body
 
     console.log(req.body)
@@ -53,17 +54,10 @@ router.post("/login", async(req, res)=>{
             return res.status(400).json({error:`Complete email, y password`})
         }
     }
-    let usuario=await usuariosManager.getBy({email, password:generaHash(password)})
-    if(!usuario){
-        if(web){
-            return res.redirect(`/login?error=Credenciales invalidas`)
-        }else{
-            res.setHeader('Content-Type','application/json');
-            return res.status(400).json({error:`Credenciales inválidas`})
-        }
-    }
+   
 
-    usuario={...usuario}
+
+    usuario={...req.user}
     delete usuario.password
     req.session.usuario=usuario
 
@@ -95,4 +89,23 @@ router.get("/logout", (req, res)=>{
 
     res.setHeader('Content-Type','application/json');
     return res.status(200).json({payload:"La sesión se cerró correctamente"});
+})
+
+router.get("/error", (req, res)=>{
+    res.setHeader('Content-Type','application/json');
+    return res.status(500).json(
+        {
+            error:`Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`,
+            detalle:`Fallo de autenticación`
+        }
+    )
+    
+})
+router.get('/github', passport.authenticate("github", {}), (req,res)=>{})
+
+router.get('/callbackGithub', passport.authenticate("github", {failureRedirect:"/api/sessions/error"}), (req,res)=>{
+    req.session.usuario=req.user
+
+    res.setHeader('Content-Type','application/json');
+    return res.status(200).json({payload:req.user});
 })
