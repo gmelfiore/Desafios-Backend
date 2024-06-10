@@ -15,8 +15,9 @@ import sessions from "express-session";
 import {router as sessionsRouter} from "./routes/sessions.router.js";
 import passport from "passport";
 import { initPassport } from "./config/passport.config.js";
+import config from "./config/config.js";
 
-const PORT= 3000;
+const PORT= config.port;
 
 const app = express();
 
@@ -27,13 +28,14 @@ app.use (express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname, '/public')))
 
 app.use(sessions({
-    secret: "Australis215",
+    secret: config.secret,
     resave:true,
     saveUninitialized:true,
     store: MongoStore.create(
        {
-        mongoUrl: "mongodb+srv://gmelfiore21:Jv7Lqy1BfMT3BgxL@cluster0.uabdr0h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&dbName=sessions",
-        ttl: 3600
+        mongoUrl: config.mongoUrl,
+        ttl: 3600,
+        dbName: "sessions"
        }
     )
 }))
@@ -106,7 +108,7 @@ socketServer.on('connection', socket=>{
 const connDB = async()=>{
     try{
         await mongoose.connect(
-            "mongodb+srv://gmelfiore21:Jv7Lqy1BfMT3BgxL@cluster0.uabdr0h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+            config.mongoUrl,
             {
                 dbName:"ecommerce"
             }
