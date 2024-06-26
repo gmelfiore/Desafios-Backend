@@ -1,7 +1,7 @@
 import express from "express";
 import MongoStore from "connect-mongo";
-import productsRouter from "./routes/products.router.js";
-import cartsRouter from "./routes/carts.router.js";
+import {router as productsRouter} from "./routes/products.router.js";
+import {router as cartsRouter} from "./routes/carts.router.js";
 import {router as views} from "./routes/views.js";
 import {Server} from "socket.io";
 import {engine} from "express-handlebars";

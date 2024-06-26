@@ -1,4 +1,5 @@
 import {cartsModelo} from "./models/cartsModelo.js"
+import {ticketModelo} from "./models/ticketModelo.js"
 
 export class CartsManagerMongo{
 
@@ -36,6 +37,10 @@ export class CartsManagerMongo{
         }catch (error){
             return res.status(500).json({ msg: "hablar con el administrador"})
         }
+    }
+
+    async finalizarCompra(ticket){
+        return await ticketModelo.create(ticket)
     }
 }
 

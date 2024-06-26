@@ -1,9 +1,9 @@
-import { ProductsService } from "../services/products.service.js";
+import { productsService } from "../services/products.service.js";
 import { isValidObjectId } from "mongoose";
 
 async function getProducts(req, res){
     try {
-        let products= await ProductsService.getProducts()
+        let products= await productsService.getProducts()
         return res.status(200).json({
             products
         })
@@ -18,7 +18,7 @@ async function getProductsById(req, res){
 		res.status(400).json ({error: `Ingrese un id válido`})
 	}
 	try {
-		const product = await ProductsService.getProductsById();
+		const product = await productsService.getProductsById();
 
     return res.status(200).json({product})
 		
@@ -35,7 +35,7 @@ async function addProduct(){
 	
 	let existe
 	try{
-		existe= await ProductsService.getProductsByCode()
+		existe= await productsService.getProductsByCode()
 	} catch (error){
 		return res.status(500).json({error: "Ocurrió un error"})
 	}
@@ -44,7 +44,7 @@ async function addProduct(){
 	}
 
 	try {
-		let nuevoProducto = await ProductsService.addProduct({id, title, description, price, thumbnails, code, stock, category})
+		let nuevoProducto = await productsService.addProduct({id, title, description, price, thumbnails, code, stock, category})
 		return res.status(201).json({nuevoProducto})
 	} catch (error) {
 		return res.status(500).json({error: "Ocurrió un error"})
@@ -62,7 +62,7 @@ async function updateProduct(){
 	}
 
 	try {
-		const productmodificado = await ProductsService.updateProduct();
+		const productmodificado = await productsService.updateProduct();
     	return res.status(200).json({productmodificado})
 		
 	} catch(error) {
@@ -76,7 +76,7 @@ async function deleteProduct(){
 		res.status(400).json ({error: `Ingrese un id válido`})
 	}
 	try {
-		let resultado = ProductsService.deleteProduct()
+		let resultado = productsService.deleteProduct()
 		if (resultado.deletedCount>0){
 			return res.status(200).json({payload:`Producto con id ${id} eliminado`})
 		}else{

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {ProductManagerMongo as ProductManager} from "../dao/productManagerMongo.js";
 import { auth } from "../middleware/auth.js";
+import { restrictAdmin } from "../middleware/restrictAdmin.js";
 export const router = Router();
 
 const p= new ProductManager();
@@ -39,7 +40,7 @@ router.get('/realtimeproducts', (req, res)=>{
    return res.render('realTimeProducts')
 });
 
-router.get('/chat', (req, res)=>{
+router.get('/chat', restrictAdmin, (req, res)=>{
    return res.status(200).render('chat')
 });
 

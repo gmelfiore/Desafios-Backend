@@ -1,8 +1,10 @@
 import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({
+    path: "./src/.env", override:true
+});
 
-export default{
+const config={
     port:process.env.PORT,
     mongoUrl: process.env.MONGO_URL,
     secret: process.env.SECRET,
@@ -10,3 +12,5 @@ export default{
     githubSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackUrl: process.env.CALLBACK_URL
 }
+
+export default config

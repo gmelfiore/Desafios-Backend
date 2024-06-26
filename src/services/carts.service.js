@@ -1,4 +1,4 @@
-import { CartsManagerMongo as DAO } from "../dao/cartsManagerMongo";
+import { CartsManagerMongo as DAO } from "../dao/cartsManagerMongo.js";
 
 class CartsService{
     constructor (dao){
@@ -20,7 +20,10 @@ class CartsService{
     async addProductsInCart(pid, cid){
         return await this.dao.addProductsInCart(Number({pid, cid}))
     }
+    async finalizarCompra(ticket){
+        return await this.dao.finalizarCompra(ticket)
+    }
 
 }
 
-export const CartsService= new CartsService(DAO)
+export const cartsService= new CartsService(DAO)

@@ -1,4 +1,4 @@
-import { ProductManagerMongo as DAO } from "../dao/productManagerMongo";
+import { ProductManagerMongo as DAO } from "../dao/productManagerMongo.js";
 
 class ProductsService{
     constructor (dao){
@@ -34,4 +34,4 @@ class ProductsService{
     }
 }
 
-export const ProductsService= new ProductsService(DAO)
+export const productsService= new ProductsService(DAO)
